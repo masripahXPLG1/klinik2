@@ -1,0 +1,112 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #fff8f6;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #fddde6;
+  color: #444;
+  text-align: center;
+  padding: 20px;
+  border-bottom: 4px solid #f9c74f;
+}
+
+nav button {
+  background-color: #ffe69a;
+  border: none;
+  margin: 5px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+nav button:hover {
+  background-color: #ffd6a5;
+}
+
+main {
+  padding: 20px;
+}
+
+section {
+  display: none;
+}
+
+section.active {
+  display: block;
+}
+
+form {
+  margin-bottom: 15px;
+}
+
+input, select, button {
+  margin: 5px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  text-align: left;
+  padding: 8px;
+}
+
+th {
+  background-color: #ffe69a;
+}
+
+footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #fddde6;
+  margin-top: 20px;
+}
+
+.stiker {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.stiker img {
+  width: 80px;
+  height: 80px;
+}
+
+.dashboard-content {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.dashboard-content img {
+  width: 150px;
+  margin-top: 20px;
+}
+
+button.edit-btn {
+  background-color: #ffd6e0;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+button.hapus-btn {
+  background-color: #ffb3b3;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}

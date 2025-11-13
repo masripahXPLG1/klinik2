@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Klinik Sehat Sentosa</title>
+<style>
+  /* ----- dasar ----- */
+  :root{
+    --bg:#fff8f6; --pink:#fddde6; --soft-yellow:#ffe69a; --muted:#444;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family: Inter, Poppins, system-ui, sans-serif;
+    background:var(--bg);
+    color:#333;
+    margin:0;
+  }
+  header{
+    background:var(--pink);
+    padding:18px 12px;
+    text-align:center;
+    border-bottom:4px solid #f9c74f;
+  }
+  header h1{margin:0;font-size:20px;color:var(--muted)}
+  nav{padding:10px 12px;text-align:center}
+  nav button{
+    background:var(--soft-yellow);
+    border:0;padding:8px 12px;margin:6px;border-radius:10px;cursor:pointer;font-weight:600;
+  }
+  nav button:hover{background:#ffd6a5}
+
+  main{padding:18px;max-width:1100px;margin:0 auto}
+  section{display:none}
+  section.active{display:block}
+
+  /* forms and tables */
+  form{background:#fff;padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.04);margin-bottom:14px}
+  form .row{display:flex;gap:10px;flex-wrap:wrap}
+  input,select,button{padding:8px;border-radius:8px;border:1px solid #dcdcdc}
+  input[type="date"]{padding:7px}
+  button[type="submit"]{background:#ffe69a;border:0;border-radius:8px;padding:8px 12px;cursor:pointer;font-weight:700}
+
+  table{width:100%;border-collapse:collapse;margin-top:8px;background:#fff;border-radius:6px;overflow:hidden}
+  th,td{padding:8px;border-bottom:1px solid #eee;text-align:left}
+  thead th{background:#fff0cc}
+  tbody tr:hover{background:#fffaf0}
+
+  .actions button{margin-right:6px;border:0;padding:6px 10px;border-radius:6px;cursor:pointer}
+  .actions .edit{background:#ffd6e0}
+  .actions .del{background:#ffb3b3}
+
+  /* titel + stiker */
+  .title-with-sticker{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+  .title-with-sticker img{width:64px;height:64px;border-radius:12px;background:#fff;padding:6px}
+
+  /* dashboard */
+  .dashboard-card{background:#fff;padding:20px;border-radius:12px;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,0.04)}
+  .dashboard-card img{width:160px;margin-top:12px}
+
+  /* responsive */
+  @media (max-width:700px){
+    .title-with-sticker img{width:52px;height:52px}
+    .row{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Klinik Sehat Sentosa</h1>
+  </header>
+
+  <nav>
+    <button onclick="show('dashboard')">Dashboard</button>
+    <button onclick="show('dokter')">Data Dokter</button>
+    <button onclick="show('pasien')">Data Pasien</button>
+    <button onclick="show('penyakit')">Jenis Penyakit</button>
+    <button onclick="show('rawatJalan')">Rawat Jalan</button>
+    <button onclick="show('rawatInap')">Rawat Inap</button>
+  </nav>
+
+  <main>
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="active">
+      <div class="dashboard-card">
+        <h2>Selamat Datang di Klinik Sehat Sentosa 💗</h2>
+        <p>Kelola data dokter, pasien, penyakit dan layanan rawat dengan mudah.</p>
+        <img src="https://cdn-icons-png.flaticon.com/512/2966/2966327.png" alt="sticker dashboard">
+      </div>
+    </section>
+
+    <!-- DOKTER -->
+    <section id="dokter">
+      <div class="title-with-sticker">
+        <img src="https://cdn-icons-png.flaticon.com/512/4320/4320351.png" alt="dokter sticker">
+        <h2>Data Dokter</h2>
+      </div>
+
+      <form id="form-dokter">
+        <div class="row">
+          <input id="dokter_nama" placeholder="Nama Dokter" required>
+          <input id="dokter_spesialis" placeholder="Spesialis" required>
+          <button type="submit" id="dokter_submit">Tambah</button>
+        </div>
+      </form>
+
+      <table>
+        <thead><tr><th>No</th><th>Nama</th><th>Spesialis</th><th>Aksi</th></tr></thead>
+        <tbody id="tb-dokter"></tbody>
+      </table>
+    </section>
+
+    <!-- PASIEN -->
+    <section id="pasien">
+      <div class="title-with-sticker">
+        <img src="https://cdn-icons-png.flaticon.com/512/706/706164.png" alt="pasien sticker">
+        <h2>Data Pasien</h2>
+      </div>
+
+      <form id="form-pasien">
+        <div class="row">
+          <input id="pasien_nama" placeholder="Nama Pasien" required>
+          <input id="pasien_umur" placeholder="Umur" type="number" required>
+          <button type="submit" id="pasien_submit">Tambah</button>
+        </div>
+      </form>
+
+      <table>
+        <thead><tr><th>No</th><th>Nama</th><th>Umur</th><th>Aksi</th></tr></thead>
+        <tbody id="tb-pasien"></tbody>
+      </table>
+    </section>
+
+    <!-- PENYAKIT -->
+    <section id="penyakit">
+      <div class="title-with-sticker">
+        <img src="https://cdn-icons-png.flaticon.com/512/3125/3125713.png" alt="penyakit sticker">
+        <h2>Jenis Penyakit</h2>
+      </div>
+
+      <form id="form-penyakit">
+        <div class="row">
+          <input id="penyakit_nama" placeholder="Nama Penyakit" required>
+          <button type="submit" id="penyakit_submit">Tambah</button>
+        </div>
+      </form>
+
+      <table>
+        <thead><tr><th>No</th><th>Nama Penyakit</th><th>Aksi</th></tr></thead>
+        <tbody id="tb-penyakit"></tbody>
+      </table>
+    </section>
+
+    <!-- RAWAT JALAN -->
+    <section id="rawatJalan">
+      <div class="title-with-sticker">
+        <img src="https://cdn-icons-png.flaticon.com/512/2913/2913465.png" alt="rawat jalan sticker">
+        <h2>Rawat Jalan</h2>
+      </div>
+
+      <form id="form-rj">
+        <div class="row">
+          <input id="rj_nama" placeholder="Nama Pasien" required>
+          <select id="rj_dokter" required><option value="">Pilih Dokter</option></select>
+          <select id="rj_penyakit" required><option value="">Pilih Penyakit</option></select>
+          <select id="rj_kelas" required>
+            <option value="">Pilih Kelas</option><option>Kelas 1</option><option>Kelas 2</option><option>Kelas 3</option><option>VIP</option>
+          </select>
+          <input id="rj_tanggal" type="date" required>
+          <button type="submit" id="rj_submit">Tambah</button>
+        </div>
+      </form>
+
+      <table>
+        <thead><tr><th>No</th><th>Nama</th><th>Dokter</th><th>Penyakit</th><th>Kelas</th><th>Tanggal</th><th>Aksi</th></tr></thead>
+        <tbody id="tb-rj"></tbody>
+      </table>
+    </section>
+
+    <!-- RAWAT INAP -->
+    <section id="rawatInap">
+      <div class="title-with-sticker">
+        <img src="https://cdn-icons-png.flaticon.com/512/2904/2904978.png" alt="rawat inap sticker">
+        <h2>Rawat Inap</h2>
+      </div>
+
+      <form id="form-ri">
+        <div class="row">
+          <input id="ri_nama" placeholder="Nama Pasien" required>
+          <select id="ri_dokter" required><option value="">Pilih Dokter</option></select>
+          <select id="ri_penyakit" required><option value="">Pilih Penyakit</option></select>
+          <select id="ri_kelas" required>
+            <option value="">Pilih Kelas</option><option>Kelas 1</option><option>Kelas 2</option><option>Kelas 3</option><option>VIP</option>
+          </select>
+          <input id="ri_tanggal" type="date" required>
+          <button type="submit" id="ri_submit">Tambah</button>
+        </div>
+      </form>
+
+      <table>
+        <thead><tr><th>No</th><th>Nama</th><th>Dokter</th><th>Penyakit</th><th>Kelas</th><th>Tanggal</th><th>Aksi</th></tr></thead>
+        <tbody id="tb-ri"></tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <footer style="text-align:center;padding:14px;background:var(--pink);margin-top:24px">© 2025 Klinik Sehat Sentosa</footer>
+
+<script>
+/* ---------- helper show ---------- */
+function show(id){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  refreshDropdowns();
+}
+
+/* ---------- storage & data model ---------- */
+const storeKey = {
+  dokter: 'klinik_dokter',
+  pasien: 'klinik_pasien',
+  penyakit: 'klinik_penyakit',
+  rj: 'klinik_rj',
+  ri: 'klinik_ri'
+};
+function load(k){ return JSON.parse(localStorage.getItem(k) || '[]'); }
+function save(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+
+/* ---------- state ---------- */
+let state = {
+  dokter: load(storeKey.dokter),
+  pasien: load(storeKey.pasien),
+  penyakit: load(storeKey.penyakit),
+  rj: load(storeKey.rj),
+  ri: load(storeKey.ri),
+  editing: {type:null,index:null} // {type:'dokter'|'pasien'|'penyakit'|'rj'|'ri', index:0}
+};
+
+/* ---------- render tabel umum ---------- */
+function renderAll(){
+  render('dokter','tb-dokter',['nama','spesialis']);
+  render('pasien','tb-pasien',['nama','umur']);
+  render('penyakit','tb-penyakit',['nama']);
+  render('rj','tb-rj',['nama','dokter','penyakit','kelas','tanggal']);
+  render('ri','tb-ri',['nama','dokter','penyakit','kelas','tanggal']);
+  refreshDropdowns();
+  // save to localStorage
+  save(storeKey.dokter, state.dokter);
+  save(storeKey.pasien, state.pasien);
+  save(storeKey.penyakit, state.penyakit);
+  save(storeKey.rj, state.rj);
+  save(storeKey.ri, state.ri);
+}
+
+function render(type, tbodyId, keys){
+  const tbody = document.getElementById(tbodyId);
+  tbody.innerHTML = '';
+  const list = state[type];
+  list.forEach((item, i) => {
+    const tr = document.createElement('tr');
+    // nomor + columns
+    let cols = `<td>${i+1}</td>`;
+    keys.forEach(k => cols += `<td>${item[k] ?? ''}</td>`);
+    // actions
+    cols += `<td class="actions">
+      <button class="edit" onclick="startEdit('${type}',${i})">Edit</button>
+      <button class="del" onclick="delItem('${type}',${i})">Hapus</button>
+    </td>`;
+    tr.innerHTML = cols;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ---------- CRUD helpers ---------- */
+function delItem(type, index){
+  if(!confirm('Hapus data ini?')) return;
+  state[type].splice(index,1);
+  renderAll();
+}
+
+function startEdit(type, index){
+  state.editing = {type, index};
+  // fill form inputs
+  const item = state[type][index];
+  if(!item) return;
+  if(type === 'dokter'){
+    document.getElementById('dokter_nama').value = item.nama;
+    document.getElementById('dokter_spesialis').value = item.spesialis;
+    document.getElementById('dokter_submit').textContent = 'Simpan';
+    show('dokter');
+  } else if(type === 'pasien'){
+    document.getElementById('pasien_nama').value = item.nama;
+    document.getElementById('pasien_umur').value = item.umur;
+    document.getElementById('pasien_submit').textContent = 'Simpan';
+    show('pasien');
+  } else if(type === 'penyakit'){
+    document.getElementById('penyakit_nama').value = item.nama;
+    document.getElementById('penyakit_submit').textContent = 'Simpan';
+    show('penyakit');
+  } else if(type === 'rj'){
+    document.getElementById('rj_nama').value = item.nama;
+    document.getElementById('rj_dokter').value = item.dokter;
+    document.getElementById('rj_penyakit').value = item.penyakit;
+    document.getElementById('rj_kelas').value = item.kelas;
+    document.getElementById('rj_tanggal').value = item.tanggal;
+    document.getElementById('rj_submit').textContent = 'Simpan';
+    show('rawatJalan');
+  } else if(type === 'ri'){
+    document.getElementById('ri_nama').value = item.nama;
+    document.getElementById('ri_dokter').value = item.dokter;
+    document.getElementById('ri_penyakit').value = item.penyakit;
+    document.getElementById('ri_kelas').value = item.kelas;
+    document.getElementById('ri_tanggal').value = item.tanggal;
+    document.getElementById('ri_submit').textContent = 'Simpan';
+    show('rawatInap');
+  }
+}
+
+/* ---------- submit handlers (Tambah / Simpan edit) ---------- */
+document.getElementById('form-dokter').addEventListener('submit', function(e){
+  e.preventDefault();
+  const nama = document.getElementById('dokter_nama').value.trim();
+  const spesialis = document.getElementById('dokter_spesialis').value.trim();
+  if(!nama || !spesialis) return alert('Isi semua kolom dokter');
+  if(state.editing.type === 'dokter'){
+    state.dokter[state.editing.index] = {nama, spesialis};
+    state.editing = {type:null,index:null};
+    document.getElementById('dokter_submit').textContent = 'Tambah';
+  } else {
+    state.dokter.push({nama, spesialis});
+  }
+  this.reset();
+  renderAll();
+});
+
+document.getElementById('form-pasien').addEventListener('submit', function(e){
+  e.preventDefault();
+  const nama = document.getElementById('pasien_nama').value.trim();
+  const umur = document.getElementById('pasien_umur').value.trim();
+  if(!nama || !umur) return alert('Isi semua kolom pasien');
+  if(state.editing.type === 'pasien'){
+    state.pasien[state.editing.index] = {nama, umur};
+    state.editing = {type:null,index:null};
+    document.getElementById('pasien_submit').textContent = 'Tambah';
+  } else {
+    state.pasien.push({nama, umur});
+  }
+  this.reset();
+  renderAll();
+});
+
+document.getElementById('form-penyakit').addEventListener('submit', function(e){
+  e.preventDefault();
+  const nama = document.getElementById('penyakit_nama').value.trim();
+  if(!nama) return alert('Isi nama penyakit');
+  if(state.editing.type === 'penyakit'){
+    state.penyakit[state.editing.index] = {nama};
+    state.editing = {type:null,index:null};
+    document.getElementById('penyakit_submit').textContent = 'Tambah';
+  } else {
+    state.penyakit.push({nama});
+  }
+  this.reset();
+  renderAll();
+});
+
+document.getElementById('form-rj').addEventListener('submit', function(e){
+  e.preventDefault();
+  const nama = document.getElementById('rj_nama').value.trim();
+  const dokter = document.getElementById('rj_dokter').value;
+  const penyakit = document.getElementById('rj_penyakit').value;
+  const kelas = document.getElementById('rj_kelas').value;
+  const tanggal = document.getElementById('rj_tanggal').value;
+  if(!nama || !dokter || !penyakit || !kelas || !tanggal) return alert('Isi semua kolom Rawat Jalan');
+  if(state.editing.type === 'rj'){
+    state.rj[state.editing.index] = {nama,dokter,penyakit,kelas,tanggal};
+    state.editing = {type:null,index:null};
+    document.getElementById('rj_submit').textContent = 'Tambah';
+  } else {
+    state.rj.push({nama,dokter,penyakit,kelas,tanggal});
+  }
+  this.reset();
+  renderAll();
+});
+
+document.getElementById('form-ri').addEventListener('submit', function(e){
+  e.preventDefault();
+  const nama = document.getElementById('ri_nama').value.trim();
+  const dokter = document.getElementById('ri_dokter').value;
+  const penyakit = document.getElementById('ri_penyakit').value;
+  const kelas = document.getElementById('ri_kelas').value;
+  const tanggal = document.getElementById('ri_tanggal').value;
+  if(!nama || !dokter || !penyakit || !kelas || !tanggal) return alert('Isi semua kolom Rawat Inap');
+  if(state.editing.type === 'ri'){
+    state.ri[state.editing.index] = {nama,dokter,penyakit,kelas,tanggal};
+    state.editing = {type:null,index:null};
+    document.getElementById('ri_submit').textContent = 'Tambah';
+  } else {
+    state.ri.push({nama,dokter,penyakit,kelas,tanggal});
+  }
+  this.reset();
+  renderAll();
+});
+
+/* ---------- dropdown updater ---------- */
+function refreshDropdowns(){
+  const dokSel = document.querySelectorAll('#rj_dokter,#ri_dokter');
+  const penySel = document.querySelectorAll('#rj_penyakit,#ri_penyakit');
+  const dokOptions = state.dokter.map(d => `<option value="${escapeHtml(d.nama)}">${escapeHtml(d.nama)}</option>`).join('') || '<option value="">--Belum ada dokter--</option>';
+  const penyOptions = state.penyakit.map(p => `<option value="${escapeHtml(p.nama)}">${escapeHtml(p.nama)}</option>`).join('') || '<option value="">--Belum ada penyakit--</option>';
+  dokSel.forEach(s => s.innerHTML = '<option value="">Pilih Dokter</option>' + dokOptions);
+  penySel.forEach(s => s.innerHTML = '<option value="">Pilih Penyakit</option>' + penyOptions);
+}
+
+/* ---------- util ---------- */
+function escapeHtml(s){ return (s+'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;'); }
+
+/* ---------- init ---------- */
+renderAll();
+</script>
+</body>
+</html>
